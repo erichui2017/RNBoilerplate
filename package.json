@@ -1,11 +1,11 @@
 {
   "name": "rndemoapp",
-  "version": "0.0.2",
+  "version": "0.0.1",
   "private": true,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "test": "jest",
-    "postversion": "react-native-version"
+    "postversion": "react-native-version  --amend"
   },
   "dependencies": {
     "@appbaseio/reactivesearch-native": "0.7.1",
