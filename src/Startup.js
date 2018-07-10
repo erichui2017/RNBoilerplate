@@ -4,11 +4,11 @@
  * @flow
  */
 import React, { Component } from 'react';
-import { Text } from 'react-native';
 import { createStackNavigator, createSwitchNavigator} from 'react-navigation';
 // 启动页
-import SplashScreen from 'react-native-splash-screen'
+import SplashScreen from 'react-native-splash-screen';
 import VersionNumber from 'react-native-version-number';
+import { Spinner } from 'native-base';
 
 // 导入所有页面
 import Welcome from './Welcome';
@@ -51,15 +51,11 @@ export default class Startup extends Component {
   }
 
   render() {
-    console.log(VersionNumber.appVersion);
-console.log(VersionNumber.buildVersion);
-console.log(VersionNumber.bundleIdentifier);
-
     if(this.state.isInit === true){
       // 先判断是否需要展示欢迎页
       return (this.state.currentVersion!==VersionNumber.appVersion? <WelcomeStackNavigator /> :<AppStackNavigator />)  
     } else {
-      return <Text>加载中。。。</Text>
+      return <Spinner color='green' />
     }
   }
 
@@ -80,20 +76,6 @@ console.log(VersionNumber.bundleIdentifier);
         );
       }
     }
-
-    // 使用key来保存数据（key-only）。这些数据一般是全局独有的，需要谨慎单独处理的数据
-    // 批量数据请使用key和id来保存(key-id)，具体请往后看
-    // 除非你手动移除，这些数据会被永久保存，而且默认不会过期。
-    storage.save({
-      key: 'currentVersion',  // 注意:请不要在key中使用_下划线符号!
-      data: { 
-        currentVersion: VersionNumber.appVersion,
-      },
-      // 如果不指定过期时间，则会使用defaultExpires参数
-      // 如果设为null，则永不过期
-      // expires: 1000 * 3600
-      expires: null
-    });
   }
 
   componentWillMount() {
