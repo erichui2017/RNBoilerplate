@@ -1,70 +1,100 @@
-
   import React, { Component } from 'react';
-  import Swiper from 'react-native-swiper';
+  // 'react-native-swiper' 没人维护，弃用
+  import Carousel, { ParallaxImage, Pagination  } from 'react-native-snap-carousel';
   import I18n from '../../../i18n';
-  import {View, Image} from 'react-native';
-  import { actions } from '../../../actions';
-  import { connect } from "react-redux";
-  import {bindActionCreators} from 'redux';
-
-  class SlideShow extends Component {
-    render() {
-      let swiper = (this.props.slideShows.map((item, key) => {
-        let imageURL = "../../../resource/images/"+item;
-        return (
-          <Image source={require('../../../resource/images/avatar.jpg')} />
-        )
-      }));   
-
-      return (
-        <Swiper
-          // style={styles.swiper}          //样式
-          height={200}                   //组件高度
-          loop={true}                    //如果设置为false，那么滑动到最后一张时，再次滑动将不会滑到第一张图片。
-          autoplay={true}                //自动轮播
-          autoplayTimeout={4}                //每隔4秒切换
-          horizontal={true}              //水平方向，为false可设置为竖直方向
-          paginationStyle={{bottom: 10}} //小圆点的位置：距离底部10px
-          showsButtons={false}           //为false时不显示控制按钮
-          showsPagination={false}       //为false不显示下方圆点
-          dot={
-            <View style={{           //未选中的圆点样式
-              backgroundColor: 'rgba(0,0,0,.2)',
-              width: 18,
-              height: 18,
-              borderRadius: 4,
-              marginLeft: 10,
-              marginRight: 9,
-              marginTop: 9,
-              marginBottom: 9,
-            }}/>
-          }
+  import { StyleSheet, View, Text, TouchableOpacity, Image, TouchableHighlight, Dimensions } from 'react-native'
   
-          activeDot={
-            <View style={{    //选中的圆点样式
-              backgroundColor: '#007aff',
-              width: 18,
-              height: 18,
-              borderRadius: 4,
-              marginLeft: 10,
-              marginRight: 9,
-              marginTop: 9,
-              marginBottom: 9,
-            }}/>
-          }
+  const { width, height } = Dimensions.get('window')
+  export default class SlideShow extends Component {
+    _renderItem ({item, index}, parallaxProps) {
+      return (
+        <View 
+          style={{
+            height:200,
+            // flex: 1, 不能设置为自动flex，否则显示不出来
+            justifyContent: 'center',
+            backgroundColor: '#97CAE5'
+          }}
         >
-          {swiper}
-        </Swiper>
+          <TouchableOpacity activeOpacity={0.8} onPress={() => this.props.navigation.navigate("Fire")} >
+            <ParallaxImage
+                source={{ uri: item.imgUrl }}
+                containerStyle={{width: width, height:150, backgroundColor:'red'}}
+                style={{marginLeft: 2, marginRight: 2, flex:1, width: '100%', height: '100%'}}
+                parallaxFactor={0.4}
+                {...parallaxProps}
+            />
+            <Text style={{color: "green"}} numberOfLines={2}>
+                { item.imgTitle }
+            </Text>
+          </TouchableOpacity>
+        </View>
       );
     }
 
-    componentWillmount() {    
+    get pagination () {
+      const { slideShows, activeSlide } = this.state;
+      return (
+          <Pagination
+            dotsLength={slideShows.length}
+            activeDotIndex={activeSlide}
+            containerStyle={{ backgroundColor: 'rgba(0, 0, 0, 0.75)' }}
+            dotStyle={{
+                width: 10,
+                height: 10,
+                borderRadius: 5,
+                marginHorizontal: 8,
+                backgroundColor: 'rgba(255, 255, 255, 0.92)'
+            }}
+            inactiveDotStyle={{
+                // Define styles for inactive dots here
+            }}
+            inactiveDotOpacity={0.4}
+            inactiveDotScale={0.6}
+          />
+      );
+    }
+
+    render () {
+        return (
+          <View>
+            <Carousel
+                data={this.state.slideShows}
+                renderItem={this._renderItem}
+                hasParallaxImages={true}
+                ref={(c) => { this._carousel = c; }}
+                sliderWidth={width}
+                itemWidth={width}
+                sliderHeight={200}
+                onSnapToItem={(index) => this.setState({ activeSlide: index }) }
+                
+                loop={true}
+                lockScrollWhileSnapping={true}
+                autoplay={true}
+            />
+            { this.pagination }
+          </View>
+        );
+    }
+
+    constructor() {
+      super();
+      this.state = {
+        slideShows: [],
+        activeSlide: 0
+      };
+
+      this._renderItem = this._renderItem.bind(this);
+    }
+
+    componentWillMount() {    
       // 获取slideshow数据
-      this.props.getSlideShow();
+      storage.load({
+        key: 'slideShows'
+      }).then(ret => {
+        this.setState({slideShows: ret});
+      }).catch(err => {
+        console.warn(err.message);
+      })
     }
   }
-
-const mapStateToProps = ({ slideShows}) => ({slideShows});
-const mapDispatchToProps = (dispatch) => (bindActionCreators(actions.getSlideShow, dispatch));
-
-export default connect(mapStateToProps, mapDispatchToProps)(SlideShow);

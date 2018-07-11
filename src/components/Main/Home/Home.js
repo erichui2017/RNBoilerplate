@@ -13,9 +13,10 @@ export default class Home extends Component {
 
     return (
       <Container>
-        <SearchBar />
-        <SlideShow />
-        <RefreshList />
+        {/* navigation不是传递给所有组件；而是只有screen组件会自动接收该属性 */}
+        <SearchBar navigation={this.props.navigation} />
+        <SlideShow navigation={this.props.navigation} />
+        <RefreshList navigation={this.props.navigation} />
       </Container>
     );
   }

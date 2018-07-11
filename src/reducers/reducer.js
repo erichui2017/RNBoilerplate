@@ -1,15 +1,18 @@
 import { handleActions, combineActions } from 'redux-actions';
 import initialState from "../store/initialState";
 
-const search = (state, { payload: { searchStr } }) => {  
-  return {
-    ...state
-  };
-}
+// 网络都是异步，数据没有返回reducer就执行完了，所以网络数据不能再redux中处理
 
-const getSlideShow = state => { 
+// const search = (state, { payload: { searchStr } }) => {  
+//   return {
+//     ...state
+//   };
+// }
+
+const clearMainTabHomeBadge = state => { 
   return {
-    ...state
+    ...state,
+    mainTabHomeBadge: 0
   };
 }
 
@@ -17,8 +20,7 @@ const getSlideShow = state => {
 // 必须是与action type拼写一直的变量名，但是需要引入action和actiontype
 export const reducer = handleActions (
   {
-    SEARCH: search,
-    GET_SLIDE_SHOW: getSlideShow
+    CLEAR_MAIN_TAB_HOME_BADGE: clearMainTabHomeBadge
   },
   initialState
 );

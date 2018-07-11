@@ -14,6 +14,12 @@ import { Spinner } from 'native-base';
 import Welcome from './Welcome';
 import Main from './components/Main';
 
+import axios from 'axios';
+// 全局默认配置
+axios.defaults.baseURL = 'http://192.168.19.2';
+// axios.defaults.headers.common['Authorization'] = AUTH_TOKEN;
+axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+
 const routeConfigs = { 
   Main: {screen:Main},
   Welcome: {screen:Welcome},

@@ -11,7 +11,7 @@ import { Provider } from "react-redux";
 import store from "./src/store/";
 
 import Startup from './src/Startup';
-import storage from './src/util/Storage';
+import storage from './src/storage/Storage';
 
 // 启动页
 import SplashScreen from 'react-native-splash-screen'

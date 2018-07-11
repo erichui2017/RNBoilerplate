@@ -19,7 +19,7 @@ export default class FlatListItem extends PureComponent {
     return (
       <ListItem thumbnail>
         <Left>
-          <Thumbnail square source={"../../../../resource/images/avatar.jpg"} />
+          {/* <Thumbnail square source={"../../../../resource/images/avatar.jpg"} /> */}
         </Left>
         <Body style={{ borderBottomWidth: 0 }}>
           <Text>RowID: {rowID}</Text>

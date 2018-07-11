@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import { Footer, FooterTab, Button, Icon, Text, Badge } from 'native-base';
 // import { BottomTabBar } from 'react-navigation-tabs';
 import I18n from '../../../i18n';
+import {actions} from '../../../actions';
 
 /**
  *自定义tab导航组件, 增加了对键盘的友好处理。
@@ -52,7 +53,10 @@ class TabComponent extends Component<Prop, State> {
               badge 
               vertical
               active={index === 0}
-              onPress={() => this.props.navigation.navigate("Home")}
+              onPress={() => {
+                this.props.clearMainTabHomeBadge();
+                this.props.navigation.navigate("Home");
+              }}
             >
               {this.props.mainTabHomeBadge!==0? <Badge><Text>{this.props.mainTabHomeBadge}</Text></Badge> : <Text></Text>}
               <Icon type="SimpleLineIcons" name="home" />
@@ -92,6 +96,11 @@ const mapStateToProps = state => ({
     mainTabHomeBadge: state.mainTabHomeBadge,
   });
   
-// TODO:增加清理事件
-// const mapDispatchToProps = (dispatch) => (bindActionCreators(actions, dispatch));
-export default connect(mapStateToProps)(TabComponent);
+// const mapStateToProps = ({ mainTabHomeBadge}) => ({mainTabHomeBadge});
+const mapDispatchToProps = (dispatch) =>{
+  return {
+    clearMainTabHomeBadge: (...args) => dispatch(actions.clearMainTabHomeBadge(...args))
+  }
+} 
+
+export default connect(mapStateToProps, mapDispatchToProps)(TabComponent);
